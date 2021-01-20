@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="6e56e54b-9eeb-49b3-b389-54e186ef91d3" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:64322/soap?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="soap.xsd" MetadataType="Schema" ID="21fff964-871b-4a20-9ffc-e96cd33e4215" SourceId="1" SourceUrl="http://localhost:64322/soap?xsd=xsd1" />
+    <MetadataFile FileName="SoapService.wsdl" MetadataType="Wsdl" ID="1b70db6d-0447-4ad6-9cda-cc7adcdb24c8" SourceId="1" SourceUrl="http://localhost:64322/soap?wsdl" />
+    <MetadataFile FileName="soap1.xsd" MetadataType="Schema" ID="c30f4235-4111-4795-a96d-1abb0a0d3045" SourceId="1" SourceUrl="http://localhost:64322/soap?xsd=xsd2" />
+    <MetadataFile FileName="soap2.xsd" MetadataType="Schema" ID="d4401c0b-8f76-408b-8777-c71dc3c82b3e" SourceId="1" SourceUrl="http://localhost:64322/soap?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
