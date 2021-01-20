@@ -23,8 +23,8 @@ Content-Type: application/json; charset=utf-8
 --Порты TCP настраиваются в конфиг файле styxSignHelper.exe.config 
 
 --Порт для REST API
-    <add key="port" value="64321" />
+add key="port" value="64321"
     
 --Порт для SOAP    
-    <add key="soapport" value="64322" />
+add key="soapport" value="64322"
     
