@@ -1,6 +1,4 @@
-﻿using Microsoft.Win32;
-using NLog;
-using styxSignHelper.Model;
+﻿using styxSignHelper.Model;
 using styxSignHelper.Properties;
 using System;
 using System.Configuration;
@@ -8,11 +6,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.ServiceModel;
-using System.ServiceModel.Configuration;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
-using System.Web;
 using System.Web.Services;
 using System.Windows.Forms;
 
@@ -20,15 +17,18 @@ namespace styxSignHelper
 {
     static class Program
     {
-        static Logger log = LogManager.GetCurrentClassLogger();
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         [STAThread]
         static void Main()
         {
             string thisprocessname = Process.GetCurrentProcess().ProcessName;
-
             if (Process.GetProcesses().Count(p => p.ProcessName == thisprocessname) > 1)
                 return;
+
+            IntPtr h = Process.GetCurrentProcess().MainWindowHandle;
+            ShowWindow(h, 0);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -42,7 +42,7 @@ namespace styxSignHelper
         private readonly Uri soapAddress;
         private readonly ServiceHost hostJson;
         private readonly ServiceHost hostSoap;
-        private readonly RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        //private readonly RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
         private readonly string localUrl = "http://localhost";
 
         public MyCustomApplicationContext()
@@ -115,7 +115,7 @@ namespace styxSignHelper
                 }
             }
 
-            rkApp.SetValue("styxWebAPI", Application.ExecutablePath);
+            //rkApp.SetValue("styxWebAPI", Application.ExecutablePath);
         }
 
         void Help(object sender, EventArgs e)
@@ -173,6 +173,7 @@ namespace styxSignHelper
     }
 
     [ServiceContract]
+    [MyBehavior]
     public interface ISignService
     {
         [OperationContract]
@@ -202,15 +203,22 @@ namespace styxSignHelper
         private SignStrResult SignStr(SingStrIn singStrIn)
         {
             SignStrResult result = new SignStrResult();
-            var client = new ASClient.ASClientControl();
-            client.Init();
-            client.Silent = false;
-            var signCertificateSerialNumber = singStrIn.CertSn.Length > 0 ? singStrIn.CertSn : client.SignCertificateSerialNumber;
-            if (signCertificateSerialNumber != null)
+            try
             {
-                result.StrToSign = singStrIn.StrToSign;
-                result.CertSn = signCertificateSerialNumber;
-                result.Signature = client.SignMessageCertCodepage(singStrIn.StrToSign, signCertificateSerialNumber, 1251);
+                var client = new ASClient.ASClientControl();
+                client.Init();
+                client.Silent = false;
+                var signCertificateSerialNumber = singStrIn.CertSn.Length > 0 ? singStrIn.CertSn : client.SignCertificateSerialNumber;
+                if (signCertificateSerialNumber != null)
+                {
+                    result.StrToSign = singStrIn.StrToSign;
+                    result.CertSn = signCertificateSerialNumber;
+                    result.Signature = client.SignMessageCertCodepage(singStrIn.StrToSign, signCertificateSerialNumber, 1251);
+                }
+            }
+            catch 
+            {
+                throw;
             }
             return result;
         }
