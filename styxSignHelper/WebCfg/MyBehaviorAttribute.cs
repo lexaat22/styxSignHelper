@@ -8,6 +8,7 @@ namespace styxSignHelper
 {
     public class MyBehaviorAttribute : Attribute, IContractBehavior, IContractBehaviorAttribute
     {
+        string headers = "X-Requested-With, X-PINGOTHER, Content-Type, Accept, Origin, Connection, Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest, Accept-Encoding, Accept-Language";
         public Type TargetContract => typeof(MyBehaviorAttribute);
 
         public void AddBindingParameters(ContractDescription contractDescription, ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
@@ -23,8 +24,10 @@ namespace styxSignHelper
             var requiredHeaders = new Dictionary<string, string>();
 
             requiredHeaders.Add("Access-Control-Allow-Origin", "*");
-            //requiredHeaders.Add("Access-Control-Request-Method", "POST,GET,PUT,DELETE,OPTIONS");
-            //requiredHeaders.Add("Access-Control-Allow-Headers", "X-Requested-With,Content-Type");
+            requiredHeaders.Add("Access-Control-Allow-Methods", "GET,HEAD,POST,DEBUG,OPTIONS");
+            requiredHeaders.Add("Access-Control-Request-Headers", headers);
+            requiredHeaders.Add("Access-Control-Allow-Headers", headers);
+            requiredHeaders.Add("Access-Control-Max-Age", "86400");
 
             dispatchRuntime.MessageInspectors.Add(new CustomHeaderMessageInspector(requiredHeaders));
         }

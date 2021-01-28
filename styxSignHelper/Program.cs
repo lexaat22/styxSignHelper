@@ -1,4 +1,5 @@
-﻿using styxSignHelper.Model;
+﻿using Newtonsoft.Json;
+using styxSignHelper.Model;
 using styxSignHelper.Properties;
 using System;
 using System.Configuration;
@@ -10,6 +11,8 @@ using System.Runtime.InteropServices;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.ServiceModel.Web;
+using System.Web;
+using System.Web.Routing;
 using System.Web.Services;
 using System.Windows.Forms;
 
@@ -177,8 +180,12 @@ namespace styxSignHelper
     public interface ISignService
     {
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "SignString", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
+        [WebInvoke(Method = "*", UriTemplate = "SignString", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
         SignStrOut SignString(SingStrIn singStrIn);
+
+        [OperationContract(Name = "GetSignString")]
+        [WebGet(UriTemplate = "SignString/{cert_sn}/{str_to_sign}")]
+        string GetSignString(string cert_sn, string str_to_sign);
     }
 
     public class SignService : ISignService
@@ -200,9 +207,20 @@ namespace styxSignHelper
             return result;
         }
 
+        public string GetSignString(string cert_sn, string str_to_sign)
+        {
+            SignStrOut result = SignString(new SingStrIn()
+            {
+                CertSn = cert_sn,
+                StrToSign = str_to_sign
+            });
+            return result.Result.Signature;
+        }
+
         private SignStrResult SignStr(SingStrIn singStrIn)
         {
             SignStrResult result = new SignStrResult();
+            if (singStrIn == null) return result;
             try
             {
                 var client = new ASClient.ASClientControl();
@@ -238,6 +256,12 @@ namespace styxSignHelper
         {
             SignService sSignService = new SignService();
             return sSignService.SignString(singStrIn);
+        }
+
+        public string GetSignString(string cert_sn, string str_to_sign)
+        {
+            SignService sSignService = new SignService();
+            return sSignService.GetSignString(cert_sn, str_to_sign);
         }
     }
 }
