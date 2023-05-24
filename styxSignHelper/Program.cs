@@ -154,23 +154,23 @@ namespace styxSignHelper
         private void CreateNotifyMenu()
         {
             trayIcon.ContextMenu = new ContextMenu();
-            trayIcon.ContextMenu.MenuItems.Add(new MenuItem("Help", Help));
-            try
-            {
-                var client = new ASClient.ASClientControl();
-                client.Init();
-                client.Silent = false;
-                var signCertificateSerialNumber = client.SignCertificateSerialNumber;
-                if (signCertificateSerialNumber != null)
-                {
-                    trayIcon.ContextMenu.MenuItems.Add(new MenuItem(signCertificateSerialNumber));
-                    trayIcon.ContextMenu.MenuItems.Add(new MenuItem("-"));
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
+            //trayIcon.ContextMenu.MenuItems.Add(new MenuItem("Help", Help));
+            //try
+            //{
+            //    var client = new ASClient.ASClientControl();
+            //    client.Init();
+            //    client.Silent = false;
+            //    var signCertificateSerialNumber = client.SignCertificateSerialNumber;
+            //    if (signCertificateSerialNumber != null)
+            //    {
+            //        trayIcon.ContextMenu.MenuItems.Add(new MenuItem(signCertificateSerialNumber));
+            //        trayIcon.ContextMenu.MenuItems.Add(new MenuItem("-"));
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine(ex.Message);
+            //}
             trayIcon.ContextMenu.MenuItems.Add(new MenuItem("Exit", Exit));
         }
     }
@@ -186,6 +186,10 @@ namespace styxSignHelper
         [OperationContract(Name = "GetSignString")]
         [WebGet(UriTemplate = "SignString/{cert_sn}/{str_to_sign}")]
         string GetSignString(string cert_sn, string str_to_sign);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", UriTemplate = "crypto/signMSG", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
+        SignMSGOut SignMSG(SignMSGIn signMSGIn);
     }
 
     public class SignService : ISignService
@@ -240,6 +244,35 @@ namespace styxSignHelper
             }
             return result;
         }
+
+        public SignMSGOut SignMSG(SignMSGIn signMSGIn)
+        {
+            SignMSGOut result = new SignMSGOut();
+            if (signMSGIn == null) return result;
+            try
+            {
+                var client = new ASClient.ASClientControl();
+                client.Init();
+                client.Silent = false;
+                var signCertificateSerialNumber = signMSGIn.CertSn.Length > 0 ? signMSGIn.CertSn : client.SignCertificateSerialNumber;
+                if (signCertificateSerialNumber != null)
+                {
+                    result.SignedMsg = client.SignMessageCertCodepage(signMSGIn.Obj, signCertificateSerialNumber, 1251);
+                    if (result.SignedMsg.Equals(string.Empty))
+                        throw new Exception("Certificate not found");
+                    else
+                        result.Result = 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Result = 0;
+                result.ErrorCode = 1;
+                result.Status = ex.Message;
+
+            }
+            return result;
+        }
     }
 
     /// <summary>
@@ -262,6 +295,11 @@ namespace styxSignHelper
         {
             SignService sSignService = new SignService();
             return sSignService.GetSignString(cert_sn, str_to_sign);
+        }
+
+        public SignMSGOut SignMSG(SignMSGIn signMSGIn)
+        {
+            throw new NotImplementedException();
         }
     }
 }

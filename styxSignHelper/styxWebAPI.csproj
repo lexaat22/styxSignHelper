@@ -88,6 +88,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\SignMSGOut.cs" />
+    <Compile Include="Model\SignMSGIn.cs" />
     <Compile Include="WebCfg\CustomHeaderMessageInspector.cs" />
     <Compile Include="Model\Error.cs" />
     <Compile Include="Model\ResponseBase.cs" />
