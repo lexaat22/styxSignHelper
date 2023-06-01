@@ -188,7 +188,7 @@ namespace styxSignHelper
         string GetSignString(string cert_sn, string str_to_sign);
 
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "crypto/signMSG", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
+        [WebInvoke(Method = "*", UriTemplate = "crypto/signMSG", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
         SignMSGOut SignMSG(SignMSGIn signMSGIn);
     }
 

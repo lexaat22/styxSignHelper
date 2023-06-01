@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов для изменения сведений,
 // связанных со сборкой.
-[assembly: AssemblyTitle("styxSignHelper")]
-[assembly: AssemblyDescription("Логакьлый веб сервис для осуществления подписи ЭЦП ключем Styx")]
+[assembly: AssemblyTitle("styxHelper")]
+[assembly: AssemblyDescription("Локальный веб сервис для осуществления подписи ЭЦП ключем Styx")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Bank")]
-[assembly: AssemblyProduct("styxSignHelper")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyProduct("styxHelper")]
+[assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("All rights")]
 [assembly: AssemblyCulture("")]
 

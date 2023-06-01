@@ -1,0 +1,26 @@
+<html>
+<head>
+<script>
+    (async function() {
+        try {
+            const response = await fetch("http://localhost:6220/crypto/signMSG", {
+                method: "POST",
+                body: JSON.stringify({
+                    cert_sn: "300000A41AB7165F9C9AB91D3100030000A41A",
+                    cms: false,
+                    detached: false,
+                    obj: "DC12205B756671D022C705FA3F70B421"
+                })
+            });
+            const jsonData = await response.json();
+            console.log(jsonData);
+        } catch (e) {
+            console.log(e);
+        }
+    })();
+</script>
+</head>
+<body>
+cors test
+</body>
+</html>
